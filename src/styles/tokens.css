@@ -1,0 +1,80 @@
+/**
+ * Design tokens.
+ *
+ * A light, dense operations surface. The people who use a console like this keep
+ * it open all day beside a spreadsheet, so the priorities are legible numbers at
+ * small sizes, calm chrome and colour that means something.
+ *
+ * Colour is rationed. Green marks the primary action and a positive movement.
+ * Amber and red are the two alert severities and appear nowhere else. Blue is
+ * reserved for the informational state. A fifth accent would leave the table
+ * unreadable at a glance, which is the only thing this screen has to do well.
+ */
+:root {
+  color-scheme: light;
+
+  --bg: #f6f8f7;
+  --surface: #ffffff;
+  --surface-muted: #f3f6f4;
+  --surface-sunken: #eef2ef;
+  --surface-hover: #f0f5f2;
+
+  --line: #e2e8e4;
+  --line-strong: #cfd8d2;
+
+  --text: #10221a;
+  --text-secondary: #4a5c53;
+  --text-muted: #75857c;
+  --text-faint: #9aa8a0;
+
+  --green-50: #eefaf2;
+  --green-100: #d6f2e1;
+  --green-300: #6ed79b;
+  --green-500: #1fa55c;
+  --green-600: #17864a;
+  --green-700: #106437;
+
+  --red-50: #fdeeee;
+  --red-500: #d64545;
+  --red-600: #b83535;
+
+  --amber-50: #fdf4e3;
+  --amber-500: #c8860d;
+  --amber-600: #a06c09;
+
+  --blue-50: #eef4fd;
+  --blue-500: #3b74c4;
+  --blue-600: #2f5da0;
+
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13.5px;
+  --text-md: 15px;
+  --text-lg: 19px;
+  --text-xl: 26px;
+  --text-2xl: 34px;
+
+  --font: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --shadow-sm: 0 1px 2px rgb(16 34 26 / 0.06);
+  --shadow: 0 2px 10px rgb(16 34 26 / 0.08);
+  --shadow-lg: 0 12px 36px rgb(16 34 26 / 0.14);
+
+  --sidebar-width: 216px;
+}
