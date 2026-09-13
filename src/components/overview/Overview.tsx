@@ -58,7 +58,7 @@ export function Overview({
         <Kpi
           label="Contribution"
           value={money(totals.contribution28)}
-          foot={`${percent(totals.marginRate, 1)} of revenue, after cost, fulfilment and fees`}
+          foot={`${percent(totals.marginRate, 1)} of revenue, after cost, fulfillment and fees`}
           icon={<Percent size={12} aria-hidden="true" />}
         />
 

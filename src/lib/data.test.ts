@@ -312,7 +312,7 @@ describe("ask", () => {
   });
 
   it("says so, and offers examples, when nothing matched", () => {
-    const answer = ask("please summarise the vibe of the catalog", indexed.rows);
+    const answer = ask("please summarize the vibe of the catalog", indexed.rows);
     expect(answer.query).toBeNull();
     expect(answer.rows).toHaveLength(0);
     expect(answer.unmatched?.length).toBeGreaterThan(0);

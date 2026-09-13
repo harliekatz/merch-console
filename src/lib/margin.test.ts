@@ -34,7 +34,7 @@ function product(overrides: Partial<Product> = {}): Product {
 describe("feeRateFor", () => {
   it("takes the worst channel, not an average", () => {
     // Any given unit can sell through the expensive channel. Averaging would
-    // report a margin the product only achieves on a favourable mix.
+    // report a margin the product only achieves on a favorable mix.
     expect(feeRateFor(["web", "marketplace"])).toBe(CHANNEL_FEES.marketplace);
     expect(feeRateFor(["web", "wholesale"])).toBe(CHANNEL_FEES.web);
   });
@@ -45,7 +45,7 @@ describe("feeRateFor", () => {
 });
 
 describe("economics", () => {
-  it("subtracts cost, fulfilment and fees from price", () => {
+  it("subtracts cost, fulfillment and fees from price", () => {
     const unit = economics(product());
     expect(unit.fees).toBeCloseTo(40 * CHANNEL_FEES.web, 6);
     expect(unit.contribution).toBeCloseTo(40 - 14 - 4 - 40 * CHANNEL_FEES.web, 6);
@@ -87,7 +87,7 @@ describe("economics", () => {
 });
 
 describe("breakevenPrice", () => {
-  it("solves p = (cost + fulfilment) / (1 − fee)", () => {
+  it("solves p = (cost + fulfillment) / (1 − fee)", () => {
     const item = product();
     const expected = (14 + 4) / (1 - CHANNEL_FEES.web);
     expect(breakevenPrice(item)).toBeCloseTo(expected, 6);
@@ -142,7 +142,7 @@ describe("promoMath", () => {
     expect(promoMath(item, "amount", 999).promoPrice).toBe(0);
   });
 
-  it("computes the discount rate from the realised price", () => {
+  it("computes the discount rate from the realized price", () => {
     expect(promoMath(product(), "amount", 10).discountRate).toBeCloseTo(0.25, 6);
   });
 });

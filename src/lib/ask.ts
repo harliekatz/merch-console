@@ -245,11 +245,11 @@ export function ask(question: string, rows: Row[]): Answer {
   return {
     query,
     rows: results,
-    summary: summarise(query, results),
+    summary: summarize(query, results),
   };
 }
 
-function summarise(query: Query, rows: Row[]): string {
+function summarize(query: Query, rows: Row[]): string {
   if (rows.length === 0) return "No products match that query.";
 
   const revenue = rows.reduce((total, row) => total + row.revenue28, 0);

@@ -129,14 +129,14 @@ export function generate(seed = SEED): Dataset {
     if (next() < 0.45) channels.push("marketplace");
     if (next() < 0.3) channels.push("wholesale");
 
-    // Fulfilment scales with price rather than being flat. Bigger, pricier
+    // Fulfillment scales with price rather than being flat. Bigger, pricier
     // items cost more to pack and ship, and a flat draw put $6 of shipping on
     // $10 products, which made the cheap half of the catalog look structurally
     // unprofitable when the real problem was the generator.
     const fulfilmentCost = round2(0.75 + price * between(next, 0.04, 0.09, 4));
 
     // Cost is solved backwards from the contribution margin the category should
-    // achieve, net of fees and fulfilment, rather than from gross margin. The
+    // achieve, net of fees and fulfillment, rather than from gross margin. The
     // console reports contribution everywhere, so generating against gross
     // margin would make every category miss its own target by construction.
     const feeRate = Math.max(...channels.map((channel) => CHANNEL_FEES[channel]));
@@ -248,7 +248,7 @@ export function generate(seed = SEED): Dataset {
     }
   }
 
-  // Stock positions, set from realised velocity so cover figures are plausible
+  // Stock positions, set from realized velocity so cover figures are plausible
   // rather than random. A slice is deliberately pushed into trouble.
   const unitsBySku = new Map<string, number>();
   for (const day of sales) {

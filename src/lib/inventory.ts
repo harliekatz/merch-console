@@ -144,8 +144,19 @@ export interface InventoryView {
   reorderPoint: number;
   safetyStock: number;
   stockoutRisk: number;
-  /** Units to bring the position back to the reorder point plus a cycle. */
+  /**
+   * The position an order brings the SKU up to: the reorder point plus one
+   * further lead time of demand. Exposed because it is the step between the
+   * reorder point and the suggested quantity, and without it the order number
+   * cannot be reproduced from anything else on screen.
+   */
+  orderUpTo: number;
+  /** Expected demand over one lead time, `velocity.daily * leadDays`. */
+  leadTimeDemand: number;
+  /** Units to bring the position back to `orderUpTo`, floored at the vendor MOQ. */
   suggestedOrder: number;
+  /** True when the MOQ, not the gap, set the suggested quantity. */
+  moqBound: boolean;
   /** 28-day revenue, used to rank what is worth acting on first. */
   revenue28: number;
   /** Gross margin dollars at risk over the lead time. */
@@ -176,9 +187,11 @@ export function assess(
   // Order up to the reorder point plus one lead time of demand, then round up
   // to the vendor's minimum. Ordering exactly to the reorder point would put the
   // SKU straight back into reorder territory on arrival.
-  const target = rop + velocity.daily * leadDays;
-  const gap = Math.max(0, target - (stock + product.onOrder));
+  const leadTimeDemand = velocity.daily * Math.max(0, leadDays);
+  const orderUpTo = rop + leadTimeDemand;
+  const gap = Math.max(0, orderUpTo - (stock + product.onOrder));
   const suggestedOrder = gap <= 0 ? 0 : Math.max(moq, Math.ceil(gap));
+  const moqBound = gap > 0 && moq > Math.ceil(gap);
 
   let state: InventoryView["state"];
   if (stock <= 0 && velocity.daily > 0) state = "stockout";
@@ -197,7 +210,10 @@ export function assess(
     reorderPoint: rop,
     safetyStock: safetyStock(velocity, leadDays),
     stockoutRisk: risk,
+    orderUpTo,
+    leadTimeDemand,
     suggestedOrder,
+    moqBound,
     revenue28,
     marginAtRisk: risk * velocity.daily * leadDays * unitMargin,
     state,

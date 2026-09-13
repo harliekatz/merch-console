@@ -3,18 +3,16 @@
 /**
  * The catalog table.
  *
- * Filtering and sorting run over the joined rows in memory. 240 rows is small
- * enough that this stays instant without virtualisation, and saying so is more
- * useful than pretending a windowing library was needed — at 50,000 SKUs it
- * would be, and the README says what would change.
+ * Filtering and sorting run over the joined rows in memory. At 240 rows this is
+ * instant without virtualization. At 50,000 it would need it, which the
+ * limitations document covers.
  *
- * Export writes the filtered view, not the whole catalog. Exporting everything
- * regardless of the filters on screen is a small betrayal that costs people an
- * afternoon.
+ * Export writes the filtered view rather than the whole catalog, so what lands
+ * in the file matches what is on screen.
  */
 import { useMemo, useState } from "react";
 import { ArrowUpDown, Download, Filter, Search, X } from "lucide-react";
-import { money, moneyCents, percent, days as formatDays } from "@/lib/format";
+import { money, moneyCents, percent, probabilityValue, days as formatDays } from "@/lib/format";
 import { EmptyRow, StatePill } from "@/components/ui/primitives";
 import type { Row } from "@/lib/select";
 import type { ConsoleApi } from "@/state/useConsole";
@@ -317,7 +315,7 @@ export function Catalog({
 function exportCsv(rows: Row[]): void {
   const header = [
     "SKU", "Product", "Category", "Vendor", "Status", "Price", "Unit cost",
-    "Fulfilment", "Contribution", "Margin %", "28d units", "28d revenue",
+    "Fulfillment", "Contribution", "Margin %", "28d units", "28d revenue",
     "On hand", "On order", "Days of cover", "Stockout risk %", "State",
   ];
 
@@ -339,7 +337,7 @@ function exportCsv(rows: Row[]): void {
     Number.isFinite(row.inventory.daysOfCover)
       ? row.inventory.daysOfCover.toFixed(0)
       : "",
-    (row.inventory.stockoutRisk * 100).toFixed(0),
+    probabilityValue(row.inventory.stockoutRisk),
     row.inventory.state,
   ]);
 

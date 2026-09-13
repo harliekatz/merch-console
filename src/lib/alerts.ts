@@ -6,11 +6,11 @@
  * investigate before they can act on it is a task, not an alert.
  *
  * Ranking is by severity first, then by dollars at stake. A stockout on a SKU
- * doing $40 a month and one doing $4,000 are not the same alert, and sorting
- * purely by rule type would bury the second behind a page of the first. This is
- * the difference between an alert list people use and one they turn off.
+ * doing $40 a month and one doing $4,000 are not the same alert, and sorting by
+ * rule type alone would bury the second behind a page of the first.
  */
 import { OVERSTOCK_DAYS } from "./inventory";
+import { probabilityValue } from "./format";
 import { breakevenPrice, promoMath } from "./margin";
 import type { VendorHealth } from "./vendors";
 import type { Alert, Promotion, Severity } from "./types";
@@ -57,7 +57,7 @@ export function buildAlerts(inputs: AlertInputs): Alert[] {
         kind: "stockout-risk",
         sku: product.sku,
         title: `${product.name} runs out before restock`,
-        detail: `${Math.round(inventory.stockoutRisk * 100)}% chance of stocking out inside the ${row.vendor.quotedLeadDays}-day lead time. ${inventory.available} available, ${inventory.daysOfCover.toFixed(0)} days of cover, reorder point ${Math.ceil(inventory.reorderPoint)}.`,
+        detail: `${probabilityValue(inventory.stockoutRisk)}% chance of running out inside the ${row.vendor.quotedLeadDays} day lead time. ${inventory.available} available, ${inventory.daysOfCover.toFixed(0)} days of cover, reorder point ${Math.ceil(inventory.reorderPoint)}.`,
         action: `Order ${inventory.suggestedOrder} units from ${row.vendor.name}.`,
         atStake: inventory.marginAtRisk,
       });
@@ -71,7 +71,7 @@ export function buildAlerts(inputs: AlertInputs): Alert[] {
         kind: "below-cost",
         sku: product.sku,
         title: `${product.name} sells below cost`,
-        detail: `At $${product.price.toFixed(2)}, contribution is $${unit.contribution.toFixed(2)} after $${product.unitCost.toFixed(2)} cost, $${product.fulfilmentCost.toFixed(2)} fulfilment and $${unit.fees.toFixed(2)} fees. Every unit sold loses money.`,
+        detail: `At $${product.price.toFixed(2)}, contribution is $${unit.contribution.toFixed(2)} after $${product.unitCost.toFixed(2)} cost, $${product.fulfilmentCost.toFixed(2)} fulfillment and $${unit.fees.toFixed(2)} fees. Every unit sold loses money.`,
         action: `Break-even price is $${breakevenPrice(product).toFixed(2)}. Reprice or delist.`,
         // Volume makes this worse, not better, so the loss scales with units.
         atStake: Math.abs(unit.contribution) * row.units28,

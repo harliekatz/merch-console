@@ -380,6 +380,67 @@
 .kv dt { color: var(--text-muted); }
 .kv dd { color: var(--text); font-variant-numeric: tabular-nums; text-align: right; }
 
+/* Decision block ------------------------------------------------------- */
+.decision {
+  padding: var(--s4);
+  border: 1px solid var(--green-300);
+  border-radius: var(--radius-lg);
+  background: var(--green-50);
+}
+
+.decision-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.decision-value {
+  font-size: var(--text-xl);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--text);
+}
+
+.decision-unit {
+  font-size: var(--text-md);
+  font-weight: 550;
+  color: var(--text-secondary);
+}
+
+.decision-cost {
+  margin-top: 2px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.decision-reason {
+  margin-top: var(--s3);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.decision-note {
+  margin-top: var(--s3);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.disclosure-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: var(--s3);
+  padding: 3px 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--green-700);
+}
+
+.disclosure-toggle:hover { text-decoration: underline; }
+
 /* Formula callouts ----------------------------------------------------- */
 .formula {
   padding: var(--s3);

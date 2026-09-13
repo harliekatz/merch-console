@@ -51,9 +51,15 @@ await shot("01-overview");
 await nav("Catalog");
 await shot("02-catalog");
 
-// Open the drawer on the first product row.
+// Open the drawer on the first product row, then expand the derivation so the
+// captured panel shows both the decision and the working behind it.
 await page.locator("tbody tr button").first().click();
 await page.waitForTimeout(400);
+const working = page.getByRole("button", { name: /Show the working/ });
+if (await working.count()) {
+  await working.click();
+  await page.waitForTimeout(300);
+}
 await shot("03-product-drawer", false);
 await page.keyboard.press("Escape");
 await page.waitForTimeout(250);

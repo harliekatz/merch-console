@@ -3,15 +3,14 @@
 /**
  * The replenishment planner.
  *
- * Ranked by margin at risk rather than by how low the stock looks, because those
- * two orderings disagree constantly. A cheap SKU with two units left is visually
- * alarming and worth $30; a high-velocity SKU sitting just under its reorder
- * point on a 45-day lead time is worth thousands and looks fine on a shelf.
+ * Ranked by margin at risk rather than by remaining units. A cheap SKU with two
+ * units left is worth $30. A fast mover just under its reorder point on a 45 day
+ * lead time is worth thousands and looks unremarkable on a shelf.
  */
 import { useMemo, useState } from "react";
 import { Download, Package } from "lucide-react";
 import { OVERSTOCK_DAYS } from "@/lib/inventory";
-import { money, percent, days as formatDays } from "@/lib/format";
+import { money, probability, probabilityValue, days as formatDays } from "@/lib/format";
 import { EmptyRow, Kpi, StatePill } from "@/components/ui/primitives";
 import type { Row } from "@/lib/select";
 import type { ConsoleApi } from "@/state/useConsole";
@@ -71,8 +70,8 @@ export function Inventory({
         <div>
           <h1>Inventory</h1>
           <p>
-            Continuous-review planning at a 95% service level. Ranked by margin at risk,
-            not by how low the number looks.
+            Continuous-review planning. Safety stock is sized for a 95% service level.
+            Rows are ranked by margin at risk rather than by remaining units.
           </p>
         </div>
         <button
@@ -166,7 +165,7 @@ export function Inventory({
                     <td className="num">{formatDays(row.inventory.daysOfCover)}</td>
                     <td className="num">{Math.ceil(row.inventory.reorderPoint)}</td>
                     <td className={`num ${row.inventory.stockoutRisk > 0.4 ? "down" : ""}`}>
-                      {percent(row.inventory.stockoutRisk)}
+                      {probability(row.inventory.stockoutRisk)}
                     </td>
                     <td className="num">{money(row.inventory.marginAtRisk)}</td>
                     <td className="num strong">
@@ -190,11 +189,14 @@ export function Inventory({
       <div className="card card-pad section">
         <h3 style={{ marginBottom: "var(--s2)" }}>How the order quantity is derived</h3>
         <div className="formula">
-          velocity <b>v</b> = mean daily units over 28 days (days with no sale count as zero)<br />
-          variability <b>σ</b> = standard deviation of those daily units<br />
-          safety stock = <b>1.645 · σ · √L</b> &nbsp; (95% service level)<br />
+v = mean daily units over 28 days, in units/day (days with no sale count as zero)<br />
+          σ = standard deviation of those daily units, in units/day<br />
+          L = vendor quoted lead time, in days<br />
+          <br />
+          safety stock = <b>1.645 · σ · √L</b> &nbsp; (sized for a 95% service level)<br />
           reorder point = <b>v · L + safety stock</b><br />
-          suggested order = <b>max(MOQ, reorder point + v · L − available − on order)</b>
+          order up to = <b>reorder point + v · L</b><br />
+          suggested order = <b>max(MOQ, order up to − available − on order)</b>
         </div>
         <p style={{ marginTop: "var(--s3)", fontSize: "var(--text-sm)" }}>
           The √L term is the part that gets done wrong in a spreadsheet. Variance adds over
@@ -233,7 +235,7 @@ function exportOrders(rows: Row[]): void {
       String(row.product.onOrder),
       row.inventory.velocity.daily.toFixed(2),
       row.inventory.reorderPoint.toFixed(0),
-      (row.inventory.stockoutRisk * 100).toFixed(0),
+      probabilityValue(row.inventory.stockoutRisk),
       String(row.inventory.suggestedOrder),
       row.product.unitCost.toFixed(2),
       (row.inventory.suggestedOrder * row.product.unitCost).toFixed(2),

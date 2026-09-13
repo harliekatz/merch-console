@@ -3,15 +3,12 @@
 /**
  * The question box.
  *
- * The design decision that matters here is the honesty of the framing. This is
- * pattern matching against a fixed set of merchandising questions, and the
- * screen says so in the first sentence, shows the parsed query above the
- * results, and names what it can answer when it fails.
+ * Pattern matching against a fixed set of merchandising questions. The screen
+ * says so, shows the parsed query above the results, and lists what it can
+ * answer when a question does not match.
  *
- * A chat-shaped box that silently produces plausible nonsense on anything
- * outside its patterns is worse than a dropdown, because people cannot tell the
- * difference between an answer and a guess. Showing the query makes every
- * result checkable, which is the same contract a saved report offers.
+ * Showing the query is what makes a result checkable, since the reader can see
+ * the filters and sort that produced it.
  */
 import { useState } from "react";
 import { CornerDownLeft, Search, Sparkles } from "lucide-react";
@@ -42,9 +39,9 @@ export function Ask({
         <div>
           <h1>Ask</h1>
           <p>
-            Type a merchandising question and this runs it against the joined catalog. It
-            is deterministic pattern matching over a fixed set of queries, not a language
-            model, and it shows you the query it ran.
+            Type a merchandising question and this runs it against the joined catalog.
+            It matches your question against a fixed set of query shapes and shows you
+            the query it ran. There is no language model involved.
           </p>
         </div>
       </div>
@@ -196,8 +193,8 @@ export function Ask({
               <h3 style={{ marginBottom: "var(--s2)" }}>No matching query</h3>
               <p style={{ fontSize: "var(--text-sm)" }}>{answer.summary}</p>
               <p style={{ marginTop: "var(--s3)", fontSize: "var(--text-sm)" }}>
-                It did not guess, because a wrong answer that looks confident is worse than
-                no answer. These are the shapes it can run:
+                Nothing was run, so nothing is shown. These are the query shapes it can
+                answer.
               </p>
               <div className="row" style={{ marginTop: "var(--s3)" }}>
                 {(answer.unmatched ?? EXAMPLES).map((example) => (
@@ -226,10 +223,9 @@ export function Ask({
             parsed out of the question.
           </p>
           <p style={{ marginTop: "var(--s3)", fontSize: "var(--text-sm)" }}>
-            A production version would put a language model in front of this to widen what
-            it understands, but the layer underneath would stay: the model would pick the
-            query, and the query would still be shown. That way the answer is correct by
-            construction rather than correct if the model behaved.
+            A production version could put a language model in front of this to widen
+            what it understands. The layer underneath would stay the same. The model
+            would pick the query, and the query would still be shown.
           </p>
         </div>
       )}

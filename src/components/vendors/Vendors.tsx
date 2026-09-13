@@ -127,7 +127,7 @@ function VendorCard({ entry }: { entry: VendorHealth }) {
 
           <dl>
             <div className="kv">
-              <dt>Receipts analysed</dt>
+              <dt>Receipts analyzed</dt>
               <dd>{entry.receiptCount}</dd>
             </div>
             <div className="kv">

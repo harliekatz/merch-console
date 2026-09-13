@@ -229,3 +229,34 @@ describe("assess", () => {
     expect(rich.marginAtRisk).toBeGreaterThan(cheap.marginAtRisk);
   });
 });
+
+describe("order quantity is reproducible from what the panel shows", () => {
+  it("exposes the order-up-to level that sits between reorder point and quantity", () => {
+    // The drawer previously showed the reorder point and the final quantity but
+    // not the step between them, so the number could not be reproduced.
+    const view = assess(product({ onHand: 955, committed: 0 }), steady(37), 45, 200, 12);
+
+    expect(view.orderUpTo).toBeCloseTo(view.reorderPoint + view.leadTimeDemand, 6);
+    expect(view.leadTimeDemand).toBeCloseTo(view.velocity.daily * 45, 6);
+  });
+
+  it("reproduces the suggested quantity from the exposed intermediates", () => {
+    const item = product({ onHand: 955, committed: 0, onOrder: 0 });
+    const view = assess(item, steady(37), 45, 200, 12);
+
+    const rebuilt = Math.max(
+      200,
+      Math.ceil(view.orderUpTo - view.available - item.onOrder),
+    );
+    expect(rebuilt).toBe(view.suggestedOrder);
+  });
+
+  it("flags when the vendor minimum, not the shortfall, set the quantity", () => {
+    const small = assess(product({ onHand: 10 }), steady(1), 7, 500, 5);
+    expect(small.suggestedOrder).toBe(500);
+    expect(small.moqBound).toBe(true);
+
+    const large = assess(product({ onHand: 0 }), steady(40), 45, 50, 5);
+    expect(large.moqBound).toBe(false);
+  });
+});

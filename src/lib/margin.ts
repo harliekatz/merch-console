@@ -2,7 +2,7 @@
  * Unit economics and promotion arithmetic.
  *
  * The number that matters is contribution margin per unit, not gross margin on
- * the product record. A SKU at 42% "margin" that carries a $6 fulfilment cost
+ * the product record. A SKU at 42% "margin" that carries a $6 fulfillment cost
  * and a 12% marketplace fee is a different business from one at 42% that ships
  * in an envelope, and a console that reports only the first number will keep
  * recommending promotions on the wrong products.
@@ -22,7 +22,7 @@ export interface UnitEconomics {
   fulfilmentCost: number;
   /** Dollar value of channel fees at the current price. */
   fees: number;
-  /** Price less cost, fulfilment and fees. */
+  /** Price less cost, fulfillment and fees. */
   contribution: number;
   /** Contribution as a share of price. */
   marginRate: number;
@@ -35,7 +35,7 @@ export interface UnitEconomics {
  *
  * A SKU listed on both the web and a marketplace can have any given unit sell
  * through either. Averaging the fee would report a margin the product only
- * achieves on a favourable channel mix, which is the optimistic assumption to
+ * achieves on a favorable channel mix, which is the optimistic assumption to
  * make in exactly the place it does the most damage.
  */
 export function feeRateFor(channels: Channel[]): number {
@@ -66,7 +66,7 @@ export function economics(product: Product, priceOverride?: number): UnitEconomi
 /** The price at which contribution reaches zero. Below this, volume hurts. */
 export function breakevenPrice(product: Product): number {
   const feeRate = feeRateFor(product.channels);
-  // p - cost - fulfilment - p·fee = 0  →  p = (cost + fulfilment) / (1 - fee)
+  // p - cost - fulfillment - p·fee = 0  →  p = (cost + fulfillment) / (1 - fee)
   return (product.unitCost + product.fulfilmentCost) / (1 - feeRate);
 }
 

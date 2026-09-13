@@ -32,6 +32,31 @@ export function percent(fraction: number, digits = 0): string {
   return `${value.toFixed(digits)}%`;
 }
 
+/**
+ * Formats a modeled probability without claiming certainty.
+ *
+ * Rounding to whole percent turned 0.9997 into "100%" and 0.0001 into "0%", so
+ * the display asserted that a stockout was certain, or impossible, when the
+ * model said neither. Values in the top and bottom half-percent are shown as
+ * bounds instead. Everything between rounds normally.
+ */
+export function probability(fraction: number): string {
+  if (!Number.isFinite(fraction)) return "0%";
+  const value = Math.min(1, Math.max(0, fraction)) * 100;
+  if (value >= 99.5) return ">99%";
+  if (value > 0 && value < 0.5) return "<1%";
+  return `${value.toFixed(0)}%`;
+}
+
+/** The same bounds as `probability`, for CSV columns and alert text. */
+export function probabilityValue(fraction: number): string {
+  if (!Number.isFinite(fraction)) return "0";
+  const value = Math.min(1, Math.max(0, fraction)) * 100;
+  if (value >= 99.5) return ">99";
+  if (value > 0 && value < 0.5) return "<1";
+  return value.toFixed(0);
+}
+
 export function signedPercent(fraction: number, digits = 1): string {
   const value = Number.isFinite(fraction) ? fraction * 100 : 0;
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}%`;

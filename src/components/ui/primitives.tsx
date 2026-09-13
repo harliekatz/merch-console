@@ -15,7 +15,7 @@ export function Kpi({
   label: string;
   value: ReactNode;
   foot?: ReactNode;
-  /** When given, renders a signed change with an arrow and colour. */
+  /** When given, renders a signed change with an arrow and color. */
   change?: number;
   icon?: ReactNode;
   children?: ReactNode;
