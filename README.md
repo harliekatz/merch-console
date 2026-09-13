@@ -2,7 +2,7 @@
 
 A merchandising workspace that joins product, vendor, inventory, pricing, promotion and sales data into one view, then answers the questions a merchandiser actually has to decide on each week.
 
-**Demo.** Not deployed yet. [Run it locally](#run-it-locally) in about a minute.
+**Demo.** [merch-console.netlify.app](https://merch-console.netlify.app)
 
 ![The overview screen with headline figures, revenue against the prior period, category mix and the ranked alert queue](docs/screens/01-overview.png)
 
