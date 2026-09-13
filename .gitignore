@@ -9,3 +9,6 @@ coverage/
 *.log
 .idea/
 .vscode/
+
+# TypeScript incremental build artifact
+*.tsbuildinfo
